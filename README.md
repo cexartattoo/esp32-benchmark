@@ -4,7 +4,7 @@
 
 ## 🌐 Ver Análisis Online
 
-**[🔗 Ver Análisis Completo](https://tu-usuario.github.io/esp32-benchmark)**
+**[🔗 Ver Análisis Completo](https://cexartattoo.github.io/esp32-benchmark/)**
 
 ## 📋 Resumen de Resultados
 
