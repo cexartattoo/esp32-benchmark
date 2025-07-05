@@ -59,15 +59,18 @@ uint32_t benchMul(T a, T b) {
 
 ### Tabla de Rendimiento
 
-![Benchmark Results](https://github.com/cexartattoo/esp32-benchmark/blob/main/screenshots/results.png)
+![Benchmark Results](https://github.com/cexartattoo/esp32-benchmark/blob/main/screenshots/O_basicas.png)
+![Benchmark Results](https://github.com/cexartattoo/esp32-benchmark/blob/main/screenshots/O_complejas.png)
+![Benchmark Results](https://github.com/cexartattoo/esp32-benchmark/blob/main/screenshots/strings_estr.png)
+![Benchmark Results](https://github.com/cexartattoo/esp32-benchmark/blob/main/screenshots/operaciones_salida.png)
 
 ### Gráfico Comparativo
 
-![Performance Chart](C:\Users\ramir\PycharmProjects\esp32-benchmark\screenshots\O_basicas.png)
+![Performance Chart](https://github.com/cexartattoo/esp32-benchmark/blob/main/screenshots/results.png)
 
 ### Análisis Detallado
 
-![Detailed Analysis](C:\Users\ramir\PycharmProjects\esp32-benchmark\screenshots\results.png)
+![Detailed Analysis](https://github.com/cexartattoo/esp32-benchmark/blob/main/screenshots/concl.png)
 
 ## 📁 Estructura del Proyecto
 
