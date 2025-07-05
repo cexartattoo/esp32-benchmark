@@ -4,7 +4,7 @@
 
 ## 🌐 Ver Análisis Online
 
-**[🔗 Ver Análisis Completo](https://tu-usuario.github.io/esp32-benchmark-analysis)**
+**[🔗 Ver Análisis Completo](https://tu-usuario.github.io/esp32-benchmark)**
 
 ## 📋 Resumen de Resultados
 
@@ -72,33 +72,16 @@ uint32_t benchMul(T a, T b) {
 
 ![Detailed Analysis](https://github.com/cexartattoo/esp32-benchmark/blob/main/screenshots/concl.png)
 
-## 📁 Estructura del Proyecto
-
-```
-esp32-benchmark-analysis/
-├── index.html          # Análisis web interactivo
-├── benchmark.ino       # Código del benchmark para ESP32
-├── README.md          # Este archivo
-└── screenshots/       # Capturas de pantalla
-    ├── results.png
-    ├── chart.png
-    └── analysis.png
-```
 
 ## 🚀 Cómo Usar
 
-1. **Ejecutar Benchmark:**
+**Ejecutar Benchmark:**
    ```bash
    # Cargar benchmark.ino en tu ESP32
    # Abrir Serial Monitor a 115200 baudios
    # Copiar resultados
    ```
 
-2. **Ver Análisis:**
-   ```bash
-   # Abrir index.html en navegador
-   # O visitar: https://tu-usuario.github.io/esp32-benchmark-analysis
-   ```
 
 ## 🤝 Contribuciones
 
