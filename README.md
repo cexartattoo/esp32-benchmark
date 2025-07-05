@@ -59,7 +59,7 @@ uint32_t benchMul(T a, T b) {
 
 ### Tabla de Rendimiento
 
-![Benchmark Results](C:\Users\ramir\PycharmProjects\esp32-benchmark\screenshots\results.png)
+![Benchmark Results](https://github.com/cexartattoo/esp32-benchmark/blob/main/screenshots/results.png)
 
 ### Gráfico Comparativo
 
