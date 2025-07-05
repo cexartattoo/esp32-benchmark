@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32 Benchmark Analysis</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #3498db;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        th {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+
+        .fast { background-color: #d4edda; color: #155724; }
+        .medium { background-color: #fff3cd; color: #856404; }
+        .slow { background-color: #f8d7da; color: #721c24; }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 30px 0;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .analysis-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #e74c3c;
+            transition: transform 0.3s ease;
+        }
+
+        .analysis-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .analysis-card h3 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .conclusion {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+            font-size: 1.1em;
+            box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .chart-container {
+                height: 300px;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 ESP32 Performance Benchmark Analysis</h1>
+
+        <div class="info-box">
+            <strong>Condiciones de Prueba:</strong><br>
+            1,000,000 iteraciones (operaciones aritméticas) | 10,000 iteraciones (strings) | 1,000 iteraciones (prints)
+        </div>
+
+        <div class="section">
+            <h2>🔢 Operaciones Aritméticas Básicas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tipo de Dato</th>
+                        <th>Multiplicación (μs)</th>
+                        <th>División (μs)</th>
+                        <th>Suma (μs)</th>
+                        <th>Resta (μs)</th>
+                        <th>Módulo (μs)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="fast">
+                        <td><strong>int8_t</strong></td>
+                        <td>62,740</td>
+                        <td>112,929</td>
+                        <td>58,559</td>
+                        <td>96,198</td>
+                        <td>112,930</td>
+                    </tr>
+                    <tr class="medium">
+                        <td><strong>int16_t</strong></td>
+                        <td>108,748</td>
+                        <td>112,934</td>
+                        <td>94,108</td>
+                        <td>89,926</td>
+                        <td>129,661</td>
+                    </tr>
+                    <tr class="medium">
+                        <td><strong>int32_t</strong></td>
+                        <td>92,016</td>
+                        <td>104,566</td>
+                        <td>92,017</td>
+                        <td>92,016</td>
+                        <td>117,112</td>
+                    </tr>
+                    <tr class="fast">
+                        <td><strong>uint8_t</strong></td>
+                        <td>62,740</td>
+                        <td>102,054</td>
+                        <td>58,558</td>
+                        <td>58,558</td>
+                        <td>112,929</td>
+                    </tr>
+                    <tr class="medium">
+                        <td><strong>uint16_t</strong></td>
+                        <td>112,930</td>
+                        <td>104,565</td>
+                        <td>94,107</td>
+                        <td>58,554</td>
+                        <td>125,480</td>
+                    </tr>
+                    <tr class="medium">
+                        <td><strong>uint32_t</strong></td>
+                        <td>92,017</td>
+                        <td>100,383</td>
+                        <td>92,016</td>
+                        <td>54,377</td>
+                        <td>104,562</td>
+                    </tr>
+                    <tr class="medium">
+                        <td><strong>float</strong></td>
+                        <td>114,721</td>
+                        <td>293,421</td>
+                        <td>112,971</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="slow">
+                        <td><strong>double</strong></td>
+                        <td>700,938</td>
+                        <td>2,584,679</td>
+                        <td>484,660</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🔄 Operaciones Complejas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tipo de Operación</th>
+                        <th>Tiempo (μs)</th>
+                        <th>Rendimiento Relativo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="medium">
+                        <td><strong>Operaciones Mixtas int8_t</strong></td>
+                        <td>265,176</td>
+                        <td>Rápido</td>
+                    </tr>
+                    <tr class="medium">
+                        <td><strong>Operaciones Mixtas uint8_t</strong></td>
+                        <td>250,954</td>
+                        <td>Rápido</td>
+                    </tr>
+                    <tr class="medium">
+                        <td><strong>Operaciones Mixtas int32_t</strong></td>
+                        <td>280,234</td>
+                        <td>Medio</td>
+                    </tr>
+                    <tr class="medium">
+                        <td><strong>Operaciones Mixtas float</strong></td>
+                        <td>502,234</td>
+                        <td>Medio</td>
+                    </tr>
+                    <tr class="slow">
+                        <td><strong>Operaciones Mixtas double</strong></td>
+                        <td>4,046,054</td>
+                        <td>Lento</td>
+                    </tr>
+                    <tr class="slow">
+                        <td><strong>Matemáticas Avanzadas float</strong></td>
+                        <td>5,266,937</td>
+                        <td>Muy Lento</td>
+                    </tr>
+                    <tr class="slow">
+                        <td><strong>Matemáticas Avanzadas double</strong></td>
+                        <td>23,310,047</td>
+                        <td>Extremadamente Lento</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>📝 Strings y Estructuras de Datos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tipo de Operación</th>
+                        <th>Tiempo (μs)</th>
+                        <th>Observaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="fast">
+                        <td><strong>String Concatenación</strong></td>
+                        <td>13,732</td>
+                        <td>Muy eficiente</td>
+                    </tr>
+                    <tr class="medium">
+                        <td><strong>String Búsqueda</strong></td>
+                        <td>121,872</td>
+                        <td>Moderadamente rápido</td>
+                    </tr>
+                    <tr class="medium">
+                        <td><strong>String Reemplazo</strong></td>
+                        <td>218,276</td>
+                        <td>Operación costosa</td>
+                    </tr>
+                    <tr class="fast">
+                        <td><strong>Array Acceso</strong></td>
+                        <td>66,925</td>
+                        <td>Muy rápido</td>
+                    </tr>
+                    <tr class="medium">
+                        <td><strong>Array Ordenamiento</strong></td>
+                        <td>351,219</td>
+                        <td>Algoritmo O(n²)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🖨️ Operaciones de Salida (Serial)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tipo de Print</th>
+                        <th>Tiempo (μs)</th>
+                        <th>μs por operación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="medium">
+                        <td><strong>Enteros</strong></td>
+                        <td>329,386</td>
+                        <td>329.4</td>
+                    </tr>
+                    <tr class="slow">
+                        <td><strong>Flotantes</strong></td>
+                        <td>686,569</td>
+                        <td>686.6</td>
+                    </tr>
+                    <tr class="slow">
+                        <td><strong>Strings</strong></td>
+                        <td>680,050</td>
+                        <td>680.1</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="performanceChart"></canvas>
+        </div>
+
+        <div class="analysis-grid">
+            <div class="analysis-card">
+                <h3>🏆 Mejores Performers</h3>
+                <p><span class="highlight">uint8_t</span> es el más rápido para operaciones básicas</p>
+                <p><span class="highlight">int8_t</span> muy cercano en rendimiento</p>
+                <p><span class="highlight">String concatenación</span> sorprendentemente eficiente</p>
+                <p><span class="highlight">Array acceso</span> extremadamente rápido</p>
+            </div>
+
+            <div class="analysis-card">
+                <h3>⚠️ Operaciones Costosas</h3>
+                <p><span class="highlight">double</span> es 6-10x más lento que float</p>
+                <p><span class="highlight">Funciones trigonométricas</span> son muy costosas</p>
+                <p><span class="highlight">Prints al Serial</span> dominan el tiempo total</p>
+                <p><span class="highlight">String reemplazo</span> es la operación más lenta de strings</p>
+            </div>
+
+            <div class="analysis-card">
+                <h3>🔍 Patrones Interesantes</h3>
+                <p><span class="highlight">División</span> es más lenta que multiplicación</p>
+                <p><span class="highlight">uint32_t resta</span> es muy optimizada</p>
+                <p><span class="highlight">int16_t</span> tiene comportamiento irregular</p>
+                <p><span class="highlight">Operaciones mixtas</span> no escalan linealmente</p>
+            </div>
+
+            <div class="analysis-card">
+                <h3>💡 Recomendaciones</h3>
+                <p>Usa <span class="highlight">int8_t/uint8_t</span> cuando sea posible</p>
+                <p>Evita <span class="highlight">double</span> en aplicaciones críticas</p>
+                <p>Minimiza las <span class="highlight">operaciones Serial</span></p>
+                <p>Prefiere <span class="highlight">float</span> sobre double</p>
+            </div>
+        </div>
+
+        <div class="conclusion">
+            <h2>🎯 Conclusión Principal</h2>
+            <p>El ESP32 es más eficiente con tipos de datos de 8 bits, pero sorprendentemente el int32_t mantiene buen rendimiento.
+            Las operaciones en punto flotante simple (float) son aceptables, pero double debe evitarse en aplicaciones críticas.
+            La mayor limitación está en las operaciones de salida Serial, que representan el cuello de botella principal.</p>
+        </div>
+    </div>
+
+    <script>
+        // Gráfico de rendimiento comparativo
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['int8_t', 'uint8_t', 'int16_t', 'uint16_t', 'int32_t', 'uint32_t', 'float', 'double'],
+                datasets: [{
+                    label: 'Multiplicación (μs)',
+                    data: [62740, 62740, 108748, 112930, 92016, 92017, 114721, 700938],
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2
+                }, {
+                    label: 'División (μs)',
+                    data: [112929, 102054, 112934, 104565, 104566, 100383, 293421, 2584679],
+                    backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 2
+                }, {
+                    label: 'Suma (μs)',
+                    data: [58559, 58558, 94108, 94107, 92017, 92016, 112971, 484660],
+                    backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        type: 'logarithmic',
+                        title: {
+                            display: true,
+                            text: 'Tiempo (μs) - Escala Logarítmica'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Tipo de Dato'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Rendimiento Comparativo por Tipo de Dato',
+                        font: {
+                            size: 16
+                        }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
