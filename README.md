@@ -58,13 +58,16 @@ uint32_t benchMul(T a, T b) {
 ## 🖼️ Capturas del Análisis
 
 ### Tabla de Rendimiento
-![Benchmark Results](https://via.placeholder.com/800x400/3498db/ffffff?text=Benchmark+Results+Table)
+
+![Benchmark Results](C:\Users\ramir\PycharmProjects\esp32-benchmark\screenshots\results.png)
 
 ### Gráfico Comparativo
-![Performance Chart](https://via.placeholder.com/800x400/2ecc71/ffffff?text=Performance+Comparison+Chart)
+
+![Performance Chart](C:\Users\ramir\PycharmProjects\esp32-benchmark\screenshots\O_basicas.png)
 
 ### Análisis Detallado
-![Detailed Analysis](https://via.placeholder.com/800x400/e74c3c/ffffff?text=Detailed+Analysis+Cards)
+
+![Detailed Analysis](C:\Users\ramir\PycharmProjects\esp32-benchmark\screenshots\results.png)
 
 ## 📁 Estructura del Proyecto
 
